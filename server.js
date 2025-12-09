@@ -7,23 +7,24 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 
-// ✅ CORS for local dev & Vercel frontend
+// FINAL CORS (Vercel + Local)
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // Vite dev
-      "https://authfront-nu.vercel.app" // deployed frontend
+      "http://localhost:5173",
+      "https://authfront-nu.vercel.app"
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"]
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
   })
 );
 
-// Connect MongoDB
+// Connect DB
 connectDB();
 
 // Routes
 app.use("/api/auth", authRoute);
 
-// Start server
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));
