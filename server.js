@@ -7,26 +7,18 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 
-// ✅ CORS fix
-const allowedOrigins = [
-  "http://localhost:5173", // Vite local dev
-  "https://authfront-nu.vercel.app" // frontend deployed on Vercel
-];
+// ✅ CORS for local dev & Vercel frontend
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // Vite dev
+      "https://authfront-nu.vercel.app" // deployed frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"]
+  })
+);
 
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true); // postman or curl
-    if(allowedOrigins.indexOf(origin) === -1){
-      const msg = 'CORS policy blocked this origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  methods: ["GET","POST","PUT","DELETE"],
-  credentials: true
-}));
-
-// Connect to MongoDB
+// Connect MongoDB
 connectDB();
 
 // Routes
